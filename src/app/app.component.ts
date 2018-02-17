@@ -3,7 +3,7 @@ import { Component, ViewChild } from '@angular/core';
 import { Platform, MenuController, Nav } from 'ionic-angular';
 
 import { LoginPage } from '../pages/login/login';
-import { HelloIonicPage } from '../pages/hello-ionic/hello-ionic';
+import { ScanPage } from '../pages/scan/scan';
 import { ListPage } from '../pages/list/list';
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -17,7 +17,7 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   // make LoginPage the root (or first) page
-  rootPage = LoginPage; //HelloIonicPage;
+  rootPage = LoginPage;
   pages: Array<{title: string, component: any}>;
 
   constructor(
@@ -31,7 +31,7 @@ export class MyApp {
     // set our app's pages
     this.pages = [
       //{ title: 'Login', component: LoginPage },
-      { title: 'Register', component: HelloIonicPage },
+      { title: 'Scan', component: ScanPage },
       { title: 'Attendance log', component: ListPage }
     ];
   }
@@ -45,10 +45,8 @@ export class MyApp {
     });
   }
 
-  openPage(page) {
-    // close the menu when clicking a link from the menu
-    this.menu.close();
-    // navigate to the new page if it is not the current page
+  openPage(page) {    
+    this.menu.close();    
     this.nav.setRoot(page.component);
   }
 

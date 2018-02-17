@@ -3,10 +3,10 @@ import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner';
 import { AlertController } from 'ionic-angular';
 
 @Component({
-  selector: 'page-hello-ionic',
-  templateUrl: 'hello-ionic.html'
+  selector: 'page-scan',
+  templateUrl: 'scan.html'
 })
-export class HelloIonicPage {
+export class ScanPage {
 
   constructor(private qrScanner: QRScanner, private alertCtrl: AlertController) {
 

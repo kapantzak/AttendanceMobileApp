@@ -1,7 +1,7 @@
 import { Component, state } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { NavController, NavParams } from 'ionic-angular';
-import { HelloIonicPage } from '../../pages/hello-ionic/hello-ionic';
+import { ScanPage } from '../../pages/scan/scan';
 import * as Config from '../../config/config.dev';
 
 @Component({
@@ -35,7 +35,7 @@ export class LoginPage {
                         // this.navCtrl.push(HelloIonicPage, {
                         //     token: text
                         // });
-                        this.navCtrl.setRoot(HelloIonicPage, {
+                        this.navCtrl.setRoot(ScanPage, {
                             token: text
                         });
                     } else {
