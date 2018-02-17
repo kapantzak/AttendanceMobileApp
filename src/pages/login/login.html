@@ -1,10 +1,16 @@
 <ion-header>
 <ion-navbar>
     <ion-title>
-        Attendance Mobile App - Login
+        Attendance Mobile
     </ion-title>
 </ion-navbar>
 </ion-header>
+
+<ion-content padding *ngIf="!networkAvailable">
+    <p>No internet connection available!</p>
+    <p>Please connect to internet and retry</p>
+</ion-content>
+
 <ion-content padding>
 <form #loginForm="ngForm" (ngSubmit)="login()" autocomplete="off">
     <ion-row>

@@ -4,7 +4,7 @@ import { Platform, MenuController, Nav } from 'ionic-angular';
 
 import { LoginPage } from '../pages/login/login';
 import { ScanPage } from '../pages/scan/scan';
-import { ListPage } from '../pages/list/list';
+import { EnrollmentsPage } from '../pages/enrollments/enrollments';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -32,7 +32,7 @@ export class MyApp {
     this.pages = [
       //{ title: 'Login', component: LoginPage },
       { title: 'Scan', component: ScanPage },
-      { title: 'Attendance log', component: ListPage }
+      { title: 'My Enrollments', component: EnrollmentsPage }
     ];
   }
 
