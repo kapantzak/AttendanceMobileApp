@@ -16,12 +16,14 @@ export class LoginPage {
     private password: string;
     private networkAvailable: boolean;
 
-    constructor(public loadingCtrl: LoadingController, 
-                public http: Http, 
-                public navCtrl: NavController, 
-                public navParams: NavParams, 
-                private network: Network,
-                private storage: Storage) {
+    constructor(
+        public loadingCtrl: LoadingController, 
+        public http: Http, 
+        public navCtrl: NavController, 
+        public navParams: NavParams, 
+        private network: Network,
+        private storage: Storage
+    ) {
 
         this.networkAvailable = false;
         let connectSubscription = this.network.onConnect().subscribe(() => {
@@ -52,10 +54,11 @@ export class LoginPage {
         this.http.post(`${Config.serverUrl}api/Token`, JSON.stringify(body), {headers: headers})            
             .subscribe(data => {
                 if (data.ok === true) {
-                    let text = data.text();
-                    let invalid = text.replace(/\"/g, '') === 'InvalidCredentials';
+                    let jsonString = data.text();                    
+                    let invalid = jsonString.replace(/\"/g, '') === 'InvalidCredentials';
                     if (!invalid) {
-                        this.storage.set('token', text);
+                        let obj = JSON.parse(jsonString);
+                        this.storage.set(`${Config.storageKeys.userDetails}`, obj);                        
                         this.navCtrl.setRoot(ScanPage);
                     } else {
                         alert('Not authorized');
