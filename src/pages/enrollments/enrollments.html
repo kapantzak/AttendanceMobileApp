@@ -10,10 +10,10 @@
 <ion-content>
   <ion-list>
     <button ion-item *ngFor="let item of items" (click)="itemTapped($event, item)">
-      <ion-icon name="{{item.icon}}" item-left></ion-icon>
-      courseId: {{item.courseId}}
+      <ion-icon name="flask" item-left></ion-icon>
+      {{item.courseName}}
       <div class="item-note" item-right>
-        {{item.note}}
+        Test
       </div>
     </button>
   </ion-list>
