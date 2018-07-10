@@ -11,7 +11,7 @@
     <p>Please connect to internet and retry</p>
 </ion-content>
 
-<ion-content padding>
+<ion-content padding *ngIf="networkAvailable">
 <form #loginForm="ngForm" (ngSubmit)="login()" autocomplete="off">
     <ion-row>
     <ion-col>
