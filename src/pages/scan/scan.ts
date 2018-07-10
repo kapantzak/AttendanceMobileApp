@@ -1,7 +1,9 @@
 import { Component, state } from '@angular/core';
 import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner';
+import { Http, Headers } from '@angular/http';
 import { AlertController, LoadingController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
+import * as Config from '../../config/config.dev';
 
 @Component({
   selector: 'page-scan',
@@ -10,6 +12,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 export class ScanPage {
 
   constructor(
+    public http: Http,
     private qrScanner: QRScanner, 
     private alertCtrl: AlertController,
     private geolocation: Geolocation,
@@ -48,25 +51,55 @@ export class ScanPage {
             // Get location
             this.geolocation.getCurrentPosition().then((resp) => {
 
-              // Send 'text' and 'resp.coords' to server
+              let headers = new Headers();
+              headers.append('Content-type','application/json; charset=utf-8');
 
-              // Alert success message
-              let alert = this.alertCtrl.create({
-                title: 'Your location',
-                message: `Your location is: Lon: ${resp.coords.longitude} / Lat: ${resp.coords.latitude}`,
-                buttons: [
-                  {
-                    text: 'Close',
-                    role: 'cancel',
-                    handler: () => {              
-                      this.toggleScanMode(false);
-                    }
-                  }          
-                ]
-              });
-              alert.present();
-              loading.dismiss();
+              let body = {
+                Attendance: {
+                  "StudentId":1,
+                  "CourseID":0,
+                  "AcademicTermID":1,
+                  "Date":"2018-07-10T00:00:00",
+                  "AttendanceTypeID":0
+                },
+                CoursesAssignmentID: 1,
+                GeoLon: resp.coords.longitude,
+                GeoLat: resp.coords.latitude,
+                SessionStartTimestamp: ((new Date().getTime() * 1000) + 621355968000000000)
+              }
 
+              this.http.post(`${Config.serverUrl}api/AttendanceLog`, JSON.stringify(body), {headers: headers})            
+                  .subscribe(data => {
+                      if (data.ok === true) {
+                          let jsonString = data.text();         
+                          let invalid = jsonString.replace(/\"/g, '') === 'Invalid data';    
+                          if (!invalid) {
+                            let obj = JSON.parse(jsonString);
+
+                            // Alert success message
+                            let alert = this.alertCtrl.create({
+                              title: 'Your location',
+                              message: `Your location is: Lon: ${resp.coords.longitude} / Lat: ${resp.coords.latitude}`,
+                              buttons: [
+                                {
+                                  text: 'Close',
+                                  role: 'cancel',
+                                  handler: () => {              
+                                    this.toggleScanMode(false);
+                                  }
+                                }          
+                              ]
+                            });
+                            alert.present();
+                          }             
+                          
+                          
+                      } else {
+                          
+                      }
+                      loading.dismiss();
+                  });
+              
             }).catch((error) => {
 
               let alertError = this.alertCtrl.create({
@@ -117,7 +150,43 @@ export class ScanPage {
   }
 
   getLocation() {
-    //
+    this.geolocation.getCurrentPosition().then((resp) => {
+
+      // Send 'text' and 'resp.coords' to server
+
+      // Alert success message
+      let alert = this.alertCtrl.create({
+        title: 'Your location',
+        message: `Your location is: Lon: ${resp.coords.longitude} / Lat: ${resp.coords.latitude}`,
+        buttons: [
+          {
+            text: 'Close',
+            role: 'cancel',
+            handler: () => {              
+              this.toggleScanMode(false);
+            }
+          }          
+        ]
+      });
+      alert.present();
+      
+    }).catch((error) => {
+
+      let alertError = this.alertCtrl.create({
+        title: 'Error',
+        message: `An error occured`,
+        buttons: [
+          {
+            text: 'Close',
+            role: 'cancel',
+            handler: () => {              
+              this.toggleScanMode(false);
+            }
+          }          
+        ]
+      });
+      alertError.present();
+    });
   }
   
 }
