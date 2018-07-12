@@ -3,6 +3,7 @@ import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner';
 import { Http, Headers } from '@angular/http';
 import { AlertController, LoadingController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
+import { Storage } from '@ionic/storage';
 import * as Config from '../../config/config.dev';
 
 @Component({
@@ -11,14 +12,17 @@ import * as Config from '../../config/config.dev';
 })
 export class ScanPage {
 
+  private locationObj = null;
+
   constructor(
     public http: Http,
     private qrScanner: QRScanner, 
     private alertCtrl: AlertController,
     private geolocation: Geolocation,
-    public loadingCtrl: LoadingController
+    public loadingCtrl: LoadingController,
+    private storage: Storage
   ) {
-    
+    this.getLocation();
   }
 
   toggleScanMode(showCam: boolean) {
@@ -29,7 +33,7 @@ export class ScanPage {
   confirmRegistration(text: string) {    
     let alert = this.alertCtrl.create({
       title: 'Confirm scan',
-      message: `Do you want to register your attendance? (${text})`,
+      message: `Do you want to register your attendance?`,
       buttons: [
         {
           text: 'No',
@@ -48,38 +52,107 @@ export class ScanPage {
             });
             loading.present();
 
-            // Get location
-            this.geolocation.getCurrentPosition().then((resp) => {
+            this.storage.get(`${Config.storageKeys.userDetails}`).then((t) => {              
+              if (t) {   
+                
+                if (this.locationObj !== null) {
 
-              let headers = new Headers();
-              headers.append('Content-type','application/json; charset=utf-8');
+                  let resp = this.locationObj;
 
-              let body = {
-                Attendance: {
-                  "StudentId":1,
-                  "CourseID":0,
-                  "AcademicTermID":1,
-                  "Date":"2018-07-10T00:00:00",
-                  "AttendanceTypeID":0
-                },
-                CoursesAssignmentID: 1,
-                GeoLon: resp.coords.longitude,
-                GeoLat: resp.coords.latitude,
-                SessionStartTimestamp: ((new Date().getTime() * 1000) + 621355968000000000)
-              }
+                  // let alert = this.alertCtrl.create({
+                  //   title: 'Your location',
+                  //   message: JSON.stringify(resp),
+                  //   buttons: [
+                  //     {
+                  //       text: 'Close',
+                  //       role: 'cancel',
+                  //       handler: () => {              
+                  //         this.toggleScanMode(false);
+                  //       }
+                  //     }          
+                  //   ]
+                  // });
+                  // alert.present();
 
-              this.http.post(`${Config.serverUrl}api/AttendanceLog`, JSON.stringify(body), {headers: headers})            
-                  .subscribe(data => {
-                      if (data.ok === true) {
-                          let jsonString = data.text();         
-                          let invalid = jsonString.replace(/\"/g, '') === 'Invalid data';    
-                          if (!invalid) {
-                            let obj = JSON.parse(jsonString);
+                  let headers = new Headers();
+                  headers.append('Content-type','application/json; charset=utf-8');
 
-                            // Alert success message
-                            let alert = this.alertCtrl.create({
-                              title: 'Your location',
-                              message: `Your location is: Lon: ${resp.coords.longitude} / Lat: ${resp.coords.latitude}`,
+                  let qrObject = JSON.parse(text);
+                  
+                  let body = {
+                    Attendance: {
+                      "StudentId": t.userId.toString(),
+                      "CourseID": qrObject.CourseId.toString(),
+                      "AcademicTermID": qrObject.AcademicTermId.toString(),
+                      "Date": qrObject.Date,
+                      "AttendanceTypeID": 0
+                    },
+                    CoursesAssignmentID: qrObject.CourseAssignmentId.toString(),
+                    GeoLon: resp.longitude.toString(),
+                    GeoLat: resp.latitude.toString(),
+                    SessionStartTimestamp: qrObject.SessionStartTimestamp.toString()
+                  }
+
+                  // let alert = this.alertCtrl.create({
+                  //   title: 'Body',
+                  //   message: JSON.stringify(body),
+                  //   buttons: [
+                  //     {
+                  //       text: 'Close',
+                  //       role: 'cancel',
+                  //       handler: () => {              
+                  //         this.toggleScanMode(false);
+                  //       }
+                  //     }          
+                  //   ]
+                  // });
+                  // alert.present();
+
+                  this.http.post(`${Config.serverUrl}api/AttendanceLog`, JSON.stringify(body), {headers: headers})            
+                      .subscribe(data => {
+                          if (data.ok === true) {                              
+                              let jsonString = data.text();
+                              let responseStr = jsonString.replace(/\"/g, '');
+                              let invalid = responseStr.indexOf('Error') === 0;
+                              if (!invalid) {
+                                loading.dismiss();
+
+                                //Alert success message
+                                let alert = this.alertCtrl.create({
+                                  title: 'Success',
+                                  message: 'Your have successfully registered your attendance',
+                                  buttons: [
+                                    {
+                                      text: 'Close',
+                                      role: 'cancel',
+                                      handler: () => {              
+                                        this.toggleScanMode(false);
+                                      }
+                                    }          
+                                  ]
+                                });
+                                alert.present();
+                                
+                              } else {
+                                let alert = this.alertCtrl.create({
+                                  title: 'Error',
+                                  message: responseStr,
+                                  buttons: [
+                                    {
+                                      text: 'Close',
+                                      role: 'cancel',
+                                      handler: () => {              
+                                        this.toggleScanMode(false);
+                                      }
+                                    }          
+                                  ]
+                                });
+                                alert.present();
+                              }                                      
+                          } else {
+                            let alertError = this.alertCtrl.create({
+                              title: 'Error',
+                              message: `An error occured`,
                               buttons: [
                                 {
                                   text: 'Close',
@@ -90,35 +163,56 @@ export class ScanPage {
                                 }          
                               ]
                             });
-                            alert.present();
-                          }             
-                          
-                          
-                      } else {
-                          
-                      }
-                      loading.dismiss();
-                  });
-              
-            }).catch((error) => {
+                            alertError.present();
+                          }
+                          loading.dismiss();
+                      });
+                }
+                
+                // Get location
+                // this.geolocation.getCurrentPosition().then((resp) => {
 
-              let alertError = this.alertCtrl.create({
-                title: 'Error',
-                message: `An error occured`,
-                buttons: [
-                  {
-                    text: 'Close',
-                    role: 'cancel',
-                    handler: () => {              
-                      this.toggleScanMode(false);
-                    }
-                  }          
-                ]
-              });
-              alertError.present();
+                  
+                  
+                // }).catch((error) => {
+                //   let alertError = this.alertCtrl.create({
+                //     title: 'Error',
+                //     message: `An error occured`,
+                //     buttons: [
+                //       {
+                //         text: 'Close',
+                //         role: 'cancel',
+                //         handler: () => {              
+                //           this.toggleScanMode(false);
+                //         }
+                //       }          
+                //     ]
+                //   });
+                //   alertError.present();
+                // });
+                // loading.dismiss();
+                // this.toggleScanMode(false);
+                        
+              } else {
+                // Unauthorized
+                let alertUnauthorized = this.alertCtrl.create({
+                  title: 'Error',
+                  message: `Unauthorized user`,
+                  buttons: [
+                    {
+                      text: 'Close',
+                      role: 'cancel',
+                      handler: () => {              
+                        this.toggleScanMode(false);
+                      }
+                    }          
+                  ]
+                });
+                alertUnauthorized.present();
+              }
+        
             });
-            loading.dismiss();
-            this.toggleScanMode(false);
+
           }
         }
       ]
@@ -152,23 +246,25 @@ export class ScanPage {
   getLocation() {
     this.geolocation.getCurrentPosition().then((resp) => {
 
-      // Send 'text' and 'resp.coords' to server
+      this.locationObj = {
+        longitude: resp.coords.longitude,
+        latitude: resp.coords.latitude
+      };
 
-      // Alert success message
-      let alert = this.alertCtrl.create({
-        title: 'Your location',
-        message: `Your location is: Lon: ${resp.coords.longitude} / Lat: ${resp.coords.latitude}`,
-        buttons: [
-          {
-            text: 'Close',
-            role: 'cancel',
-            handler: () => {              
-              this.toggleScanMode(false);
-            }
-          }          
-        ]
-      });
-      alert.present();
+      // let alert = this.alertCtrl.create({
+      //   title: 'Your location',
+      //   message: JSON.stringify(this.locationObj), //`Your location is: Lon: ${resp.coords.longitude} / Lat: ${resp.coords.latitude}`,
+      //   buttons: [
+      //     {
+      //       text: 'Close',
+      //       role: 'cancel',
+      //       handler: () => {              
+      //         this.toggleScanMode(false);
+      //       }
+      //     }          
+      //   ]
+      // });
+      // alert.present();
       
     }).catch((error) => {
 
