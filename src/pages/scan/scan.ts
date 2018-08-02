@@ -27,9 +27,15 @@ export class ScanPage {
     this.checkGps();
   }
 
+  closeScanMode() {
+    this.toggleScanMode(false);
+  }
+
   toggleScanMode(showCam: boolean) {
-    let ionApp = <HTMLElement>document.getElementsByTagName("ion-app")[0];    
+    let ionApp = <HTMLElement>document.getElementsByTagName("ion-app")[0];
+    let overlay = <HTMLElement>document.getElementById("appOverlay");    
     ionApp.style.display = (showCam === true) ? 'none' : 'block';
+    overlay.style.display = (showCam !== true) ? 'none' : 'block';    
   }
 
   confirmRegistration(text: string) {    
@@ -58,29 +64,10 @@ export class ScanPage {
               if (t) {   
                 
                 if (this.locationObj !== null) {
-
                   let resp = this.locationObj;
-
-                  // let alert = this.alertCtrl.create({
-                  //   title: 'Your location',
-                  //   message: JSON.stringify(resp),
-                  //   buttons: [
-                  //     {
-                  //       text: 'Close',
-                  //       role: 'cancel',
-                  //       handler: () => {              
-                  //         this.toggleScanMode(false);
-                  //       }
-                  //     }          
-                  //   ]
-                  // });
-                  // alert.present();
-
-                  let headers = new Headers();
+                  let headers = new Headers();                  
                   headers.append('Content-type','application/json; charset=utf-8');
-
-                  let qrObject = JSON.parse(text);
-                  
+                  let qrObject = JSON.parse(text);                  
                   let body = {
                     Attendance: {
                       "StudentId": t.userId.toString(),
@@ -94,22 +81,6 @@ export class ScanPage {
                     GeoLat: resp.latitude.toString(),
                     SessionStartTimestamp: qrObject.SessionStartTimestamp.toString()
                   }
-
-                  // let alert = this.alertCtrl.create({
-                  //   title: 'Body',
-                  //   message: JSON.stringify(body),
-                  //   buttons: [
-                  //     {
-                  //       text: 'Close',
-                  //       role: 'cancel',
-                  //       handler: () => {              
-                  //         this.toggleScanMode(false);
-                  //       }
-                  //     }          
-                  //   ]
-                  // });
-                  // alert.present();
-
                   this.http.post(`${Config.serverUrl}api/AttendanceLog`, JSON.stringify(body), {headers: headers})            
                       .subscribe(data => {
                           if (data.ok === true) {                              
@@ -169,32 +140,7 @@ export class ScanPage {
                           }
                           loading.dismiss();
                       });
-                }
-                
-                // Get location
-                // this.geolocation.getCurrentPosition().then((resp) => {
-
-                  
-                  
-                // }).catch((error) => {
-                //   let alertError = this.alertCtrl.create({
-                //     title: 'Error',
-                //     message: `An error occured`,
-                //     buttons: [
-                //       {
-                //         text: 'Close',
-                //         role: 'cancel',
-                //         handler: () => {              
-                //           this.toggleScanMode(false);
-                //         }
-                //       }          
-                //     ]
-                //   });
-                //   alertError.present();
-                // });
-                // loading.dismiss();
-                // this.toggleScanMode(false);
-                        
+                }                                        
               } else {
                 // Unauthorized
                 let alertUnauthorized = this.alertCtrl.create({
@@ -226,8 +172,7 @@ export class ScanPage {
     this.qrScanner.prepare().then((status: QRScannerStatus) => {
       if (status.authorized) {         
         let ionApp = <HTMLElement>document.getElementsByTagName("ion-app")[0];
-        let scanSub = this.qrScanner.scan().subscribe((text: string) => {
-          //alert(text);
+        let scanSub = this.qrScanner.scan().subscribe((text: string) => {          
           this.confirmRegistration(text);
           this.qrScanner.hide();
           scanSub.unsubscribe();
