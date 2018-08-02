@@ -9,9 +9,21 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class ItemDetailsPage {
   item: any;
-
+  
   constructor(public navCtrl: NavController, public navParams: NavParams) {
-    // If we navigated to this page, we will have an item available as a nav param
-    this.item = navParams.get('item');
+    let paramsItem = navParams.get('item');    
+    this.item = {
+      courseName: paramsItem.courseName,
+      startDate: this.formatDate(paramsItem.startDate),
+      endDate: this.formatDate(paramsItem.endDate)
+    }
+  }
+
+  formatDate(dateStr) {
+    if (dateStr) {
+      let d = new Date(dateStr);
+      return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+    }
+    return null;
   }
 }

@@ -17,23 +17,39 @@
 
   <!-- cordova.js required for cordova apps (remove if not needed) -->
   <script src="cordova.js"></script>
-
-  <!-- un-comment this code to enable service worker
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log('service worker installed'))
-        .catch(err => console.error('Error', err));
-    }
-  </script>-->
-
-  <link href="build/main.css" rel="stylesheet">
-
+  <link href="build/main.css" rel="stylesheet">  
 </head>
+
+<style>
+  #appOverlay {
+    position: fixed;
+    top:0;
+    bottom: 0;
+    left:0;
+    right: 0;
+    background-color: transparent;
+    z-index: 9990;
+  }
+  #closeScanMode {
+    width: 90%;
+    padding: 15px;
+    box-sizing: border-box;
+    position: fixed;    
+    bottom: 10px;
+    left:5%;    
+    z-index: 9995;
+  }
+</style>
+
 <body>
 
   <!-- Ionic's root component and where the app will load -->
   <ion-app></ion-app>
+
+  <div id="appOverlay" style="display: none">
+    <img src="assets/imgs/scanBorders.png">
+    <button id="closeScanMode">Close</button>    
+  </div>
 
   <!-- The polyfills js is generated during the build process -->
   <script src="build/polyfills.js"></script>
@@ -44,6 +60,14 @@
 
   <!-- The main bundle js is generated during the build process -->
   <script src="build/main.js"></script>
+
+  <script>
+    (function() {
+      function mainCloseScanMode() {
+        alert('test');
+      }
+    })();
+  </script>
 
 </body>
 </html>
