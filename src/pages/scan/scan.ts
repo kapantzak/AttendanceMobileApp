@@ -4,6 +4,7 @@ import { Http, Headers } from '@angular/http';
 import { AlertController, LoadingController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Storage } from '@ionic/storage';
+import { Diagnostic } from '@ionic-native/diagnostic';
 import * as Config from '../../config/config.dev';
 
 @Component({
@@ -20,9 +21,10 @@ export class ScanPage {
     private alertCtrl: AlertController,
     private geolocation: Geolocation,
     public loadingCtrl: LoadingController,
-    private storage: Storage
-  ) {
-    this.getLocation();
+    private storage: Storage,
+    private diagnostic: Diagnostic
+  ) {    
+    this.checkGps();
   }
 
   toggleScanMode(showCam: boolean) {
@@ -243,46 +245,34 @@ export class ScanPage {
     }).catch((e:any) => console.log('Error: ', e))
   }
 
-  getLocation() {
-    this.geolocation.getCurrentPosition().then((resp) => {
-
-      this.locationObj = {
-        longitude: resp.coords.longitude,
-        latitude: resp.coords.latitude
-      };
-
-      // let alert = this.alertCtrl.create({
-      //   title: 'Your location',
-      //   message: JSON.stringify(this.locationObj), //`Your location is: Lon: ${resp.coords.longitude} / Lat: ${resp.coords.latitude}`,
-      //   buttons: [
-      //     {
-      //       text: 'Close',
-      //       role: 'cancel',
-      //       handler: () => {              
-      //         this.toggleScanMode(false);
-      //       }
-      //     }          
-      //   ]
-      // });
-      // alert.present();
-      
+  checkGps() {    
+    this.diagnostic.isLocationAvailable().then((isAvailable) => {
+      if (!isAvailable) {
+        let alertGpsEnabled = this.alertCtrl.create({
+          title: 'Location',
+          message: 'Please enable GPS in order to be able to register your attendance',
+          buttons: [
+            {
+              text: 'Close',
+              role: 'cancel'            
+            }          
+          ]
+        });
+        alertGpsEnabled.present();
+      }      
     }).catch((error) => {
-
       let alertError = this.alertCtrl.create({
         title: 'Error',
         message: `An error occured`,
         buttons: [
           {
             text: 'Close',
-            role: 'cancel',
-            handler: () => {              
-              this.toggleScanMode(false);
-            }
+            role: 'cancel'            
           }          
         ]
       });
       alertError.present();
     });
   }
-  
+    
 }

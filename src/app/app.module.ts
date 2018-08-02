@@ -15,6 +15,7 @@ import { QRScanner } from '@ionic-native/qr-scanner';
 import { Network } from '@ionic-native/network';
 import { Geolocation } from '@ionic-native/geolocation';
 import { IonicStorageModule } from '@ionic/storage';
+import { Diagnostic } from '@ionic-native/diagnostic';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { IonicStorageModule } from '@ionic/storage';
     QRScanner,
     Network,
     Geolocation,
+    Diagnostic,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

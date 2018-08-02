@@ -40,10 +40,7 @@ export class EnrollmentsPage {
 
   getEnrollments() {
 
-    this.storage.get(`${Config.storageKeys.userDetails}`).then((t) => {
-
-      //let token = (t) ? t.replace(/\"/g, '') : null;
-      
+    this.storage.get(`${Config.storageKeys.userDetails}`).then((t) => {      
       if (t) {
         let loading = this.loadingCtrl.create({
             content: 'Getting enrollments...'
