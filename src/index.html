@@ -31,12 +31,14 @@
     z-index: 9990;
   }
   #closeScanMode {
-    width: 90%;
+    width: 60%;
     padding: 15px;
     box-sizing: border-box;
     position: fixed;    
     bottom: 10px;
-    left:5%;    
+    left:20%;    
+    background-color: #387ef5;
+    color:#fff;
     z-index: 9995;
   }
 </style>
@@ -64,8 +66,12 @@
   <script>
     (function() {
       function mainCloseScanMode() {
-        alert('test');
+        document.getElementsByTagName('ion-app')[0].style.display = 'block';
+        document.getElementById('appOverlay').style.display = 'none';
       }
+      document.getElementById('closeScanMode').addEventListener('click', function() {
+        mainCloseScanMode();
+      });
     })();
   </script>
 
