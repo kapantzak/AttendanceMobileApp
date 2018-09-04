@@ -140,7 +140,23 @@ export class ScanPage {
                           }
                           loading.dismiss();
                       });
-                }                                        
+                } else {
+                  loading.dismiss();
+                  // Unauthorized
+                  let alertNoLocation = this.alertCtrl.create({
+                    title: 'Error',
+                    message: `No location available`,
+                    buttons: [
+                      {
+                        text: 'Close',
+                        role: 'cancel'
+                      }          
+                    ]
+                  });
+                  alertNoLocation.present();
+                }    
+                
+                
               } else {
                 // Unauthorized
                 let alertUnauthorized = this.alertCtrl.create({
@@ -168,7 +184,10 @@ export class ScanPage {
     alert.present();
   }
 
-  scan() {    
+  scan() {
+    if (this.locationObj === null) {
+        this.getLocation();
+    }   
     this.qrScanner.prepare().then((status: QRScannerStatus) => {
       if (status.authorized) {         
         let ionApp = <HTMLElement>document.getElementsByTagName("ion-app")[0];
@@ -204,6 +223,8 @@ export class ScanPage {
           ]
         });
         alertGpsEnabled.present();
+      } else {
+        this.getLocation();
       }      
     }).catch((error) => {
       let alertError = this.alertCtrl.create({
@@ -217,6 +238,15 @@ export class ScanPage {
         ]
       });
       alertError.present();
+    });
+  }
+
+  getLocation() {
+    this.geolocation.getCurrentPosition().then((resp) => {
+        this.locationObj = {
+          longitude: resp.coords.longitude,
+          latitude: resp.coords.latitude
+        }
     });
   }
     
