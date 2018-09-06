@@ -16,7 +16,10 @@ export class ItemDetailsPage {
       courseName: paramsItem.courseName,
       startDate: this.formatDate(paramsItem.startDate),
       endDate: this.formatDate(paramsItem.endDate),
-      logs: paramsItem.logs
+      logs: paramsItem.logs.map((l, index) => ({ 
+        index: index + 1,
+        date: this.formatDate(l.date) 
+      }))
     }
   }
 
