@@ -32,7 +32,7 @@ export class LoginPage {
         });
     }
 
-    ionViewDidLoad(): void {
+    ionViewDidLoad(): void {        
         let conntype = this.network.type;
         this.networkAvailable = conntype && conntype !== 'unknown' && conntype !== 'none';
     }

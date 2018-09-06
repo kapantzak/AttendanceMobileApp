@@ -15,7 +15,8 @@ export class ItemDetailsPage {
     this.item = {
       courseName: paramsItem.courseName,
       startDate: this.formatDate(paramsItem.startDate),
-      endDate: this.formatDate(paramsItem.endDate)
+      endDate: this.formatDate(paramsItem.endDate),
+      logs: paramsItem.logs
     }
   }
 
@@ -26,4 +27,5 @@ export class ItemDetailsPage {
     }
     return null;
   }
+
 }

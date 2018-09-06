@@ -16,22 +16,32 @@
           <ion-col>
             {{item.courseName}}
           </ion-col>
-        </ion-row>
-    <ion-row>
-      <ion-col>
-        Start date
-      </ion-col>
-      <ion-col>
-        {{item.startDate}}
-      </ion-col>
-    </ion-row>
-    <ion-row>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          Start date
+        </ion-col>
+        <ion-col>
+          {{item.startDate}}
+        </ion-col>
+      </ion-row>
+      <ion-row>
         <ion-col>
           End date
         </ion-col>
         <ion-col>
           {{item.endDate}}
         </ion-col>
-      </ion-row>
+      </ion-row>      
+  </ion-grid>
+  <ion-grid *ngFor="let log of item.logs;let i = index">
+    <ion-row>
+      <ion-col>
+        {{i}}
+      </ion-col>
+      <ion-col>
+        {{log.date}}
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </ion-content>
