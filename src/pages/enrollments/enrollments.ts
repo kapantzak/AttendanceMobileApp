@@ -20,18 +20,7 @@ export class EnrollmentsPage {
     public http: Http,
     private storage: Storage
   ) {
-
-    // this.icons = ['flask', 'wifi', 'beer', 'football', 'basketball', 'paper-plane',
-    // 'american-football', 'boat', 'bluetooth', 'build'];
-
-    this.items = [];
-    // for(let i = 1; i < 11; i++) {
-    //   this.items.push({
-    //     title: 'Item ' + i,
-    //     note: 'This is item #' + i,
-    //     icon: this.icons[Math.floor(Math.random() * this.icons.length)]
-    //   });
-    // }
+    this.items = [];    
   }
 
   ionViewDidLoad(): void {

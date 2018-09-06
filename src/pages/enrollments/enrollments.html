@@ -11,10 +11,7 @@
   <ion-list>
     <button ion-item *ngFor="let item of items" (click)="itemTapped($event, item)">
       <ion-icon name="arrow-dropright" item-left></ion-icon>
-      {{item.courseName}}
-      <!-- <div class="item-note" item-right>
-        <ion-icon name="eye" item-left></ion-icon>
-      </div> -->
+      {{item.courseName}}      
     </button>
   </ion-list>
 </ion-content>
