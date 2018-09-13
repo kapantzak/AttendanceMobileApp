@@ -33,8 +33,14 @@
           {{item.endDate}}
         </ion-col>
       </ion-row>      
-  </ion-grid>
+  </ion-grid>  
   <h4 *ngIf="item.logs.length==0" ion-text text-center color="danger"><ion-icon name="warning"></ion-icon> No logs yet!</h4>
+  <ion-card *ngIf="item.logs.length!=0">
+    <ion-card-title text-center color="primary">Statistics</ion-card-title>
+    <ion-card-content>
+        Logs number: {{item.logs.length}} / {{item.lecturesMinNum}}
+    </ion-card-content>    
+  </ion-card>
   <ion-card *ngIf="item.logs.length!=0">
     <ion-card-title text-center color="primary">Attendance Logs</ion-card-title>
     <ion-card-content>
@@ -49,5 +55,5 @@
           </ion-row>
         </ion-grid>
     </ion-card-content>    
-  </ion-card>  
+  </ion-card>
 </ion-content>

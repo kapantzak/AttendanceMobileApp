@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-
-import { NavController, NavParams } from 'ionic-angular';
-
+import { Storage } from '@ionic/storage';
+import { Http, Headers } from '@angular/http';
+import { NavController, NavParams, LoadingController } from 'ionic-angular';
+import * as Config from '../../config/config.dev';
 
 @Component({
   selector: 'page-item-details',
@@ -9,18 +10,28 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class ItemDetailsPage {
   item: any;
+  enrlogs: any;
   
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams,
+    public loadingCtrl: LoadingController,
+    public http: Http,
+    private storage: Storage
+  ) {
     let paramsItem = navParams.get('item');    
     this.item = {
+      id: paramsItem.id,
       courseName: paramsItem.courseName,
       startDate: this.formatDate(paramsItem.startDate),
       endDate: this.formatDate(paramsItem.endDate),
+      lecturesMinNum: paramsItem.lecturesMinNum,
+      lecturesTargetNum: paramsItem.lecturesTargetNum,      
       logs: paramsItem.logs.map((l, index) => ({ 
         index: index + 1,
         date: this.formatDate(l.date) 
-      }))
-    }
+      }))      
+    };    
   }
 
   formatDate(dateStr) {

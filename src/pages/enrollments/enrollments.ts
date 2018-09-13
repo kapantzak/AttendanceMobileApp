@@ -11,6 +11,7 @@ import * as Config from '../../config/config.dev';
 })
 export class EnrollmentsPage {
   icons: string[];
+  enrlogs: any;
   items: Array<{title: string, note: string, icon: string}>;
 
   constructor(
@@ -42,7 +43,11 @@ export class EnrollmentsPage {
 
         this.http.get(`${Config.serverUrl}api/Enrollments/GetByUserId/${t.userId}`,{headers:headers}).subscribe(data => {
           if (data.ok === true) {
-            this.items = JSON.parse(data.text());
+            try {
+              this.items = JSON.parse(data.text());
+            } catch (e) {
+              alert(e);
+            }            
           } else {
             alert('Error');
           }
