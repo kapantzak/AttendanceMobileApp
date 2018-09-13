@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { Http, Headers } from '@angular/http';
 import { NavController, NavParams, LoadingController } from 'ionic-angular';
-import * as Config from '../../config/config.dev';
+import { Chart } from 'chart.js';
 
 @Component({
   selector: 'page-item-details',
@@ -10,8 +10,10 @@ import * as Config from '../../config/config.dev';
 })
 export class ItemDetailsPage {
   item: any;
-  enrlogs: any;
-  
+  enrlogs: any;  
+  @ViewChild('doughnutCanvas') doughnutCanvas;
+  doughnutChart: any;
+
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
@@ -31,7 +33,38 @@ export class ItemDetailsPage {
         index: index + 1,
         date: this.formatDate(l.date) 
       }))      
-    };    
+    };  
+    
+  }
+
+  ionViewDidLoad() {
+
+    this.doughnutChart = new Chart(this.doughnutCanvas.nativeElement, { 
+        type: 'doughnut',
+        data: {
+            labels: ["Actual", "Remaining"],
+            datasets: [{
+                label: 'Attendance Logs',
+                data: [
+                  this.item.logs.length, 
+                  this.item.lecturesMinNum - this.item.logs.length, 
+                  //this.item.lecturesTargetNum
+                ],
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',                    
+                    //'rgba(255, 206, 86, 0.5)'                    
+                ],
+                hoverBackgroundColor: [
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 99, 132, 1)',                    
+                  //'rgba(255, 206, 86, 1)'                  
+                ]
+            }]
+        }
+
+    });
+
   }
 
   formatDate(dateStr) {

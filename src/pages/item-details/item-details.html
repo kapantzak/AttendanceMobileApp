@@ -8,41 +8,61 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid *ngIf="item">
-      <ion-row>
-          <ion-col>
-            Course name
-          </ion-col>
-          <ion-col>
-            {{item.courseName}}
-          </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          Start date
-        </ion-col>
-        <ion-col>
-          {{item.startDate}}
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          End date
-        </ion-col>
-        <ion-col>
-          {{item.endDate}}
-        </ion-col>
-      </ion-row>      
-  </ion-grid>  
+
   <h4 *ngIf="item.logs.length==0" ion-text text-center color="danger"><ion-icon name="warning"></ion-icon> No logs yet!</h4>
-  <ion-card *ngIf="item.logs.length!=0">
-    <ion-card-title text-center color="primary">Statistics</ion-card-title>
+
+  <ion-card>
+    <ion-card-header text-center color="primary">
+      Logs
+    </ion-card-header>
+    <ion-card-content>
+      <canvas #doughnutCanvas></canvas>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header text-center color="primary">
+      Info
+    </ion-card-header>
+    <ion-card-content>
+        <ion-grid *ngIf="item">
+            <ion-row>
+                <ion-col>
+                  Course name
+                </ion-col>
+                <ion-col>
+                  {{item.courseName}}
+                </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                Start date
+              </ion-col>
+              <ion-col>
+                {{item.startDate}}
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                End date
+              </ion-col>
+              <ion-col>
+                {{item.endDate}}
+              </ion-col>
+            </ion-row>      
+        </ion-grid>        
+    </ion-card-content>
+  </ion-card>
+
+  <!-- <ion-card *ngIf="item.logs.length!=0">
+    <ion-card-header text-center color="primary">Statistics</ion-card-header>
     <ion-card-content>
         Logs number: {{item.logs.length}} / {{item.lecturesMinNum}}
     </ion-card-content>    
-  </ion-card>
+  </ion-card> -->
+
   <ion-card *ngIf="item.logs.length!=0">
-    <ion-card-title text-center color="primary">Attendance Logs</ion-card-title>
+    <ion-card-header text-center color="primary">Attendance Logs</ion-card-header>
     <ion-card-content>
         <ion-grid *ngFor="let log of item.logs;" color="primary">
           <ion-row>
@@ -56,4 +76,5 @@
         </ion-grid>
     </ion-card-content>    
   </ion-card>
+
 </ion-content>
