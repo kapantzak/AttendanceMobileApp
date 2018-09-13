@@ -74,7 +74,8 @@ export class ScanPage {
                       "CourseID": qrObject.CourseId.toString(),
                       "AcademicTermID": qrObject.AcademicTermId.toString(),
                       "Date": qrObject.Date,
-                      "AttendanceTypeID": 0
+                      "AttendanceTypeID": 0,
+                      "LecturesLogId": qrObject.LectureLogId.toString()
                     },
                     CoursesAssignmentID: qrObject.CourseAssignmentId.toString(),
                     GeoLon: resp.longitude.toString(),
