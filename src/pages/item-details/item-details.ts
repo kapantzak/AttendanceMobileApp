@@ -28,7 +28,8 @@ export class ItemDetailsPage {
       startDate: this.formatDate(paramsItem.startDate),
       endDate: this.formatDate(paramsItem.endDate),
       lecturesMinNum: paramsItem.lecturesMinNum,
-      lecturesTargetNum: paramsItem.lecturesTargetNum,      
+      lecturesTargetNum: paramsItem.lecturesTargetNum,    
+      lecturesActualNum: paramsItem.lecturesActualNum,
       logs: paramsItem.logs.map((l, index) => ({ 
         index: index + 1,
         date: this.formatDate(l.date) 

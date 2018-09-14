@@ -17,7 +17,30 @@
     </ion-card-header>
     <ion-card-content>
       <canvas #doughnutCanvas></canvas>
-    </ion-card-content>
+    </ion-card-content>    
+  </ion-card>
+
+  <ion-card>
+      <ion-card-header text-center color="primary">
+          Details
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+            <ion-icon name="clipboard" item-start></ion-icon>
+            Lectures delivered
+            <ion-badge color="primary" item-end>{{item.lecturesActualNum}}</ion-badge>            
+        </ion-item>
+        <ion-item>
+            <ion-icon name="checkmark-circle-outline" item-start></ion-icon>
+            Attendances logged
+            <ion-badge color="primary" item-end>{{item.logs.length}}</ion-badge>            
+        </ion-item>
+        <ion-item>
+            <ion-icon name="close" item-start></ion-icon>
+            Absences
+            <ion-badge color="danger" item-end>{{item.lecturesActualNum - item.logs.length}}</ion-badge>
+        </ion-item>
+      </ion-card-content>
   </ion-card>
 
   <ion-card>
@@ -54,15 +77,8 @@
     </ion-card-content>
   </ion-card>
 
-  <!-- <ion-card *ngIf="item.logs.length!=0">
-    <ion-card-header text-center color="primary">Statistics</ion-card-header>
-    <ion-card-content>
-        Logs number: {{item.logs.length}} / {{item.lecturesMinNum}}
-    </ion-card-content>    
-  </ion-card> -->
-
   <ion-card *ngIf="item.logs.length!=0">
-    <ion-card-header text-center color="primary">Attendance Logs</ion-card-header>
+    <ion-card-header text-center color="primary">Attendances List</ion-card-header>
     <ion-card-content>
         <ion-grid *ngFor="let log of item.logs;" color="primary">
           <ion-row>
